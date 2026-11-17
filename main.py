@@ -1,18 +1,26 @@
 from cerebro import Cerebro
+from voz import Voz
 import memoria
 
 cerebro = Cerebro()
+voz = Voz()
 
 print("Jarvis online. Digite 'sair' para encerrar.")
-print("Comandos: /lembrar texto | /memoria | /esquecer número\n")
+print("Comandos: /lembrar texto | /memoria | /esquecer número | /voz\n")
 
 while True:
     pergunta = input("Você: ").strip()
 
     if pergunta.lower() in ("sair", "exit"):
         print("Jarvis: Até mais!")
+        voz.falar("Até mais!")
         break
     if not pergunta:
+        continue
+
+    if pergunta == "/voz":
+        voz.ativa = not voz.ativa
+        print(f"\nJarvis: Voz {'ligada' if voz.ativa else 'desligada'}.\n")
         continue
 
     if pergunta.startswith("/lembrar "):
@@ -42,4 +50,6 @@ while True:
         continue
 
     print("\nJarvis está pensando...")
-    print(f"\nJarvis: {cerebro.responder(pergunta)}\n")
+    resposta = cerebro.responder(pergunta)
+    print(f"\nJarvis: {resposta}\n")
+    voz.falar(resposta)
